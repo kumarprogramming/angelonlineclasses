@@ -91,15 +91,10 @@ export const config = {
             if (session?.user?.name && trigger === 'update') {
                 token.name = session.user.name;
             }
-            // console.log(token);
             return token;
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async signIn({ account, profile }: any) {
-            console.log({
-                "account": account,
-                "profile": profile
-            });
             let profileImage = undefined;
             if (account.provider === 'google') profileImage = profile.picture;
             if (account.provider === 'facebook') profileImage = profile.picture?.data.url;

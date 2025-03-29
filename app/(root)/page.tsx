@@ -10,7 +10,7 @@ const HomePage = async () => {
     const latestProducts = await getLatestProducts();
     return (
         <>
-            <ProductList data={latestProducts} title='Latest Arrivals' />
+            <ProductList data={latestProducts} title='Latest Courses' />
         </>
     );
 }

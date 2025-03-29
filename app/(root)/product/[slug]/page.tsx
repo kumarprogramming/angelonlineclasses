@@ -1,7 +1,7 @@
 import AddToCart from "@/components/shared/products/add-to-cart";
 import ProductImages from "@/components/shared/products/product-images";
 import ProductPrice from "@/components/shared/products/product-price";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 // import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getMyCart } from "@/lib/actions/cart.action";
@@ -48,26 +48,24 @@ const ProductDetailsPage = async (props: { params: Promise<{ slug: string }> }) 
                                     <div>Price</div>
                                     <div><ProductPrice value={Number(product.price)} /></div>
                                 </div>
-                                <div className="mb-2 flex justify-between">
+                                {/* <div className="mb-2 flex justify-between">
                                     <div>Status</div>
                                     {product.stock > 0 ? (
                                         <Badge variant='outline'>In Stock</Badge>
                                     ) : (
                                         <Badge variant='destructive'>Out of Stock</Badge>
                                     )}
+                                </div> */}
+                                <div className="flex-center">
+                                    <AddToCart cart={cart} item={{
+                                        productId: product.id,
+                                        name: product.name,
+                                        slug: product.slug,
+                                        price: product.price,
+                                        qty: 1,
+                                        image: product.images[0],
+                                    }} />
                                 </div>
-                                {product.stock > 0 && (
-                                    <div className="flex-center">
-                                        <AddToCart cart={ cart} item={{
-                                            productId: product.id,
-                                            name: product.name,
-                                            slug: product.slug,
-                                            price: product.price,
-                                            qty: 1,
-                                            image: product.images[0],
-                                        }}/>
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 

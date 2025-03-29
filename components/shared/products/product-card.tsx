@@ -31,9 +31,9 @@ const ProductCard = ({ product }: { product: Product }) => {
                 <div className="flex item-center gap-2">
                     <p className="text-md"> Size:</p>
                     <div className="flex gap-1">
-                        {product.sizes?.map((size: string, index: number) => (
+                        {product.days?.map((day: string, index: number) => (
                             <div key={index} className="px-2 py-1 border text-xs font-medium rounded-md">
-                                { size}
+                                { day}
                             </div>
                         ))}
                     </div>
@@ -41,11 +41,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
                 <div className="flex-between gap-4">
                     <p>{product.rating} Stars</p>
-                    {product.stock > 0 ? (
                         <ProductPrice value={Number(product.price)} />
-                    ) : (
-                        <p className="text-destructive">Out of stock!</p>
-                    )}
                 </div>
             </CardContent>
 

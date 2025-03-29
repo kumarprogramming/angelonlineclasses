@@ -10,13 +10,13 @@ export const insertProductSchema = z.object({
     category: z.string().min(3, 'Category must be at least 3 characters'),
     brand: z.string().min(3, 'Brand must be at least 3 characters'),
     description: z.string().min(3, 'Description must be at least 3 characters'),
-    stock: z.coerce.number(),
+    // stock: z.coerce.number(),
     numReviews: z.coerce.number(),
     images: z.array(z.string()).min(1, 'Product must be at least 1 image'),
     isFeatured: z.boolean(),
     banner: z.string().nullable(),
     colors: z.array(z.string()).min(1, 'Product must be at least 1 color'),
-    sizes: z.array(z.string()).min(1, 'Product must be at least 1 size'),
+    days: z.array(z.string()).min(1, 'Product must be at least 1 day'),
     price: currency
 });
 
