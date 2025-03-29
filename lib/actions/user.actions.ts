@@ -35,18 +35,6 @@ export async function signInWithGoogle() {
     }
 }
 
-// Sign in user with Facebook
-export async function signInWithFacebook() {
-    try {
-        await signIn('facebook');
-    } catch (error) {
-        if (isRedirectError(error)) {
-            throw error;
-        }
-        return { success: false, message: 'Authentication failed, please try again' }
-    }
-}
-
 // Sign out user
 export async function signOutUser() {
     await signOut();

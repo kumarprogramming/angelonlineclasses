@@ -13,10 +13,27 @@ import {
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { OrderItem } from "@prisma/client";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { Loader } from "lucide-react";
+import { approvePayPalOrder, createPayPalOrder } from "@/lib/actions/order.action";
+import { toast } from "sonner";
 
+const PaypalLoadingState = () => {
+    const [{ isPending, isRejected }] = usePayPalScriptReducer();
+    if (isPending) {
+        return (<>
+            <div className="flex gap-2 justify-center text-center">
+                <Loader className="w-4 h-4 animate-spin" /> Loading PayPal
+            </div>
+        </>)
+    } else if (isRejected) {
+        return (<div className="flex gap-2 justify-center text-center">
+            Error while loading PayPal
+        </div>)
+    }
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const OrderDetailsTable = ({ order, clientId }: { order: any, clientId: string }) => {
+const OrderDetailsTable = ({ order, payPalClientId }: { order: any, payPalClientId: string }) => {
     const { id,
         shippingAddress,
         orderitems,
@@ -30,6 +47,29 @@ const OrderDetailsTable = ({ order, clientId }: { order: any, clientId: string }
         paidAt,
         deliveredAt
     } = order;
+
+    const handleCreatePaypalOrder = async () => {
+        const res = await createPayPalOrder(order.id);
+        // show message
+        if (!res.success) {
+            toast.error(`${res.message}`);
+            return;
+        }
+
+        return res.data;
+    }
+
+    const handleApprovePaypalOrder = async (data: { orderID: string }) => {
+        const res = await approvePayPalOrder(order.id, data);
+        // show message
+        if (res.success) {
+            toast.success(`${res.message}`);
+            return;
+        } else {
+            toast.error(`${res.message}`);
+            return;
+        }
+    }
     return (<>
         <h1 className="py-4 text-2xl font-bold">Order - {formatId(id)}</h1>
         <div className="grid md:grid-cols-3 md:gap-5">
@@ -128,16 +168,17 @@ const OrderDetailsTable = ({ order, clientId }: { order: any, clientId: string }
                         </div>
 
                         {/* Paypal payment */}
-                        {!isPaid && paymentMethod === 'PayPal'} && (
-                        <div>
-                            <PayPalScriptProvider options={{ clientId: clientId }}>
-                                <PayPalButtons
-                                // createOrder={()=>{}}
-                                // onApprove={onApprove}
-                                />
-                            </PayPalScriptProvider>
-                        </div>
-                        )
+                        {(!isPaid && paymentMethod === 'PayPal') && (
+                            <div>
+                                <PayPalScriptProvider options={{ clientId: payPalClientId }}>
+                                    <PaypalLoadingState />
+                                    <PayPalButtons
+                                        createOrder={handleCreatePaypalOrder}
+                                        onApprove={handleApprovePaypalOrder}
+                                    />
+                                </PayPalScriptProvider>
+                            </div>
+                        )}
 
                         {/* Stripe payment */}
 
@@ -147,6 +188,7 @@ const OrderDetailsTable = ({ order, clientId }: { order: any, clientId: string }
             </div>
         </div>
     </>);
+
 }
 
 export default OrderDetailsTable;

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInDefaultValue } from "@/lib/constants";
 import Link from "next/link";
-import { signInWithCredentials, signInWithFacebook, signInWithGoogle } from '@/lib/actions/user.actions';
+import { signInWithCredentials, signInWithGoogle } from '@/lib/actions/user.actions';
 import { useActionState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import { useSearchParams } from "next/navigation";
@@ -17,7 +17,6 @@ const CredentialsSignInForm = () => {
     })
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
-    const [isPendingFB, startTransitionFB] = useTransition();
     const callbackUrl = searchParams.get('callbackUrl') || '/';
     const SignInButton = () => {
         const { pending } = useFormStatus();
@@ -32,13 +31,6 @@ const CredentialsSignInForm = () => {
             await signInWithGoogle();
         });
     }
-
-    const facebookSignIn = async () => {
-        startTransitionFB(async () => {
-            await signInWithFacebook();
-        });
-    }
-
 
     const GoogleSignInButton = () => {
         return (
@@ -67,24 +59,6 @@ const CredentialsSignInForm = () => {
         )
     }
 
-    const FacebookSignInButton = () => {
-        return (
-            <>
-                <Button
-                    className="w-full flex items-center gap-2 bg-white text-black border border-gray-300 hover:bg-gray-100"
-                    variant="outline"
-                    onClick={() => facebookSignIn()}>
-                    {isPendingFB ? (
-                        <Loader className="w-4 h-4 animate-spin" />
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
-                            <path fill="#039be5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path><path fill="#fff" d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"></path>
-                        </svg>
-                    )} {' '} Sign in with Facebook
-                </Button>
-            </>
-        )
-    }
     return (
         <form action={action}>
             <input type='hidden' name='callbackUrl' value={callbackUrl} />
@@ -112,7 +86,6 @@ const CredentialsSignInForm = () => {
                     </Link>
                 </div>
                 <GoogleSignInButton />
-                <FacebookSignInButton />
             </div>
         </form>
     );

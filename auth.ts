@@ -6,7 +6,6 @@ import { compareSync } from 'bcrypt-ts-edge';
 import { authConfig } from './auth.config';
 import { cookies } from 'next/headers';
 import Google from "next-auth/providers/google"
-import Facebook from "next-auth/providers/facebook"
 export const config = {
     pages: {
         signIn: '/sign-in',
@@ -19,7 +18,7 @@ export const config = {
     },
     adapter: PrismaAdapter(prisma),
     providers: [
-        Google,Facebook,
+        Google,
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
