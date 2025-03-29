@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import * as Sentry from "@sentry/nextjs";
+// import * as Sentry from "@sentry/nextjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -52,7 +52,8 @@ export function formatError(error: any): string {
 export function handleError(error: any): string {
     const formattedErrorMessage = formatError(error);
     if (process.env.NODE_ENV === 'production') {
-        Sentry.captureException(error);
+        // Sentry.captureException(error);
+        console.error('Error in Prod mode:', error);
     } else {
         console.error('Error in development mode:', error);
     }
